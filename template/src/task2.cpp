@@ -10,6 +10,8 @@
 #include "linear.h"
 #include "argvparser.h"
 
+#include "featureExtractor.h"
+
 using std::string;
 using std::vector;
 using std::ifstream;
@@ -80,14 +82,9 @@ void SavePredictions(const TFileList& file_list,
 // You should implement this function by yourself =)
 void ExtractFeatures(const TDataSet& data_set, TFeatures* features) {
     for (size_t image_idx = 0; image_idx < data_set.size(); ++image_idx) {
-        
-        // PLACE YOUR CODE HERE
-        // Remove this sample code and place your feature extraction code here
-        vector<float> one_image_features;
-        one_image_features.push_back(1.0);
-        features->push_back(make_pair(one_image_features, 1));
-        // End of sample code
+        FeatureExtractor extractor(*(data_set[image_idx].first));
 
+        features->push_back(make_pair(extractor.Extract(), data_set[image_idx].second));
     }
 }
 
