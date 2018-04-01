@@ -38,7 +38,6 @@ class FeatureExtractor {
 	uint height; // высота градиента
 	uint width; // ширина градиента
 
-	void GetGrayscale(); // получение изображения в оттенках серого
 	void GetGradient(); // получение градиента изображения
 
 	void normalizeHistogram(std::vector<float> &histogram); // нормализация гистограммы

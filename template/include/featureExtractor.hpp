@@ -1,12 +1,3 @@
-// получение изображения в оттенках серого
-void FeatureExtractor::GetGrayscale() {
-	grayscale = GImage(original.n_rows, original.n_cols); // создаём изображение такого же размера
-
-	for (uint i = 0; i < original.n_rows; i++) 
-		for (uint j = 0; j < original.n_cols; j++) 
-			grayscale(i, j) = 0.299 * std::get<0>(original(i, j)) + 0.587 * std::get<1>(original(i, j)) + 0.114 * std::get<2>(original(i, j)); // каждый пиксель переводим в яркость: Y = 0.299R + 0.587G + 0.114B
-}
-
 void FeatureExtractor::GetGradient() {
 	uint n = grayscale.n_rows;
 	uint m = grayscale.n_cols;
@@ -220,12 +211,15 @@ Descriptor FeatureExtractor::getColorDescriptor() {
 FeatureExtractor::FeatureExtractor(BMP &bmp) {
 	// получаем оригинальное RGB изображение
 	original = RGBImage(bmp.TellHeight(), bmp.TellWidth()); // создаём изображение такого же размера, как и оригинал
+	grayscale = GImage(bmp.TellHeight(), bmp.TellWidth()); // создаём изображение такого же размера, как и оригинал
 
-	for (int i = 0; i < bmp.TellHeight(); i++) 
-		for (int j = 0; j < bmp.TellWidth(); j++) 
+	for (int i = 0; i < bmp.TellHeight(); i++) {
+		for (int j = 0; j < bmp.TellWidth(); j++) {
 			original(i, j) = std::make_tuple(bmp(j, i)->Red, bmp(j, i)->Green, bmp(j, i)->Blue); // запоминаем значения каналов
+			grayscale(i, j) = 0.299 * bmp(j, i)->Red + 0.587 * bmp(j, i)->Green + 0.114 * bmp(j, i)->Blue; // каждый пиксель переводим в яркость: Y = 0.299R + 0.587G + 0.114B
+		}
+	}
 
-	GetGrayscale(); // получаем его копию в оттенках серого
 	GetGradient(); // находим модуль градиента и его направление
 }
 
